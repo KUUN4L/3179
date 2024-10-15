@@ -4,21 +4,402 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-    <title>Australia Compared to the Rest of the World</title>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5.30.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.20.1"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.26.0"></script>
+    <title>Health Compared Across the World</title>
 </head>
 <body>
-    <h1 style="text-align: center;">Australia Compared to the Rest of the World</h1>
+    <div id="top"></div>
+    <h1 style="text-align: center;">Health Compared Across the World</h1>
     <div class="topnav">
-        <a class="active" href="index.html">Home</a>
-        <a href="visualization.html">Birth Rate</a>
-        <a href="visualisation2.html">Birth & Firtility Rate</a>
-        <a href="#about">About</a>
+        <a href="#section1">Life Expectancy</a>
+        <a href="#section2">Birth & Firtility Rate</a>
+        <a href="#section3">Maternal Mortality Ratio and Infant Mortality</a>
     </div>
     <div style="text-align: center;">
-        <h2>This website is made to highlight key differences in statistics between Australia and other countries. 
-            Different measures are looked at such as Fertility Rate and Birth Rate or GDP which<br>allow for trends to be formed.
+        <h3>This website is made to highlight key differences in health between Australia and other countries. 
+            Different measures<br>are looked at such as Fertility Rate and Birth Rate or Life Expectancy which allow for trends to be formed.<br>
+            This webpage was made by Kunal Varadachari for FIT3179 Visualisation 2.
 
-        </h2>
+        </h3>
     </div>
+    <h2 id ="section1"style="text-align: center;">Life Expectancy and Physicians in Each Country</h2>
+    <div id="vis" style="left: auto;"></div>
+    <div id="vis2" style="right: auto;"></div>
+    <br>
+    <h4>The Life Expectancy and Physicians per 1000 maps correlate with higher life expectancy often occuring in locations with higher numbers of physicians per 1000. We can see that Australia has a 
+        life expectancy on the higher end and it is the same with their physicians per 1000. Central Africa, however, is the opposite and have a lower life expectancy and lower numbers of physicians per 1000. Of Course 
+        physicians are important to the life expectancies of the citizens of countries but later visualisations will highlight their importance.
+    </h4>
+    <br><br><br>
+    <h2 id="section2"style="text-align: center;">Birth Rate and Fertility Rate</h2>
+    <div id="vis3" style="left: auto;"></div>
+    <div id="vis4" style="right: auto;"></div>
+    <br>
+    <h4>Fertility Rate and Birth Rate are similar but Fertility Rate is the number of children born to an average woman during her entire reproductive life and Birth Rate is the number of children born per 1000 persons.
+        This is a small but important distinction as Fertility rate is more accurate for examining the population growth and examining current societal attidudes and population replacement. Birth Rate better captures age 
+        structure of the population. These visualisations continue to build up a profile of countries as a higher birth rate does not necessarily correlate to a higher fertility rate and places with higher physicians per 
+        100 and life expectancies tend to have lower birth and fertility rates. This can hint at high infant mortalities in places with higher birth rates due to the life expectancies being lower but the next couple of 
+        visualisations will elucidate whether or not this is a correct assumption. 
+    </h4>
+    <br><br><br>
+    <h2 id="section3" style="text-align: center;">Maternal Mortality Ratio and Infant Mortality</h2>
+    <div id="vis5" style="left: auto;"></div>
+    <div id="vis6" style="right: auto;"></div>
+    <br>
+    <h4> The maternal mortality ratio is the number of deaths of mothers which are pregnancy related in one year and infant mortality rate is the percentage of deaths of children underneath 1 year of age. It is very 
+        important to consider that the scale for the maternal mortality ratio is logarithmic which shows how important physicians are as Australia, which has 3.68 physicians per 1000 has a maternal mortality ratio of 
+        6 but Chad, which has 0.04 physicians per 1000, has a maternal mortality rate of 1000 which is an incredible increase in pregnancy related deaths. Infant mortality is also incredibly high in Chad at 71 where as 
+        Australia has an infant mortality rate of 3.1.<br><br>
+        The impact that a lack of physicians has is immense as it can greatly reduce the life expectancy of the citizens of a country especially the most at risk populations such as pregnant mothers and newborn children.
+    </h4>
+    <script>
+        const spec = {
+        "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+        "title": "Life expectancy",
+        "width": 800,
+        "height": 500,
+        "data": {
+            "url": "https://raw.githubusercontent.com/KUUN4L/3179/refs/heads/main/ne_110m.json",
+            "format": {"type": "topojson", "feature": "ne_110m_admin_0_countries"}
+        },
+        "projection": {"type": "equalEarth"},
+        "layer": [
+            {
+            "transform": [
+                {
+                "calculate": "'Data is not available in ' + datum.properties.NAME",
+                "as": "note"
+                }
+            ],
+            "mark": {"type": "geoshape", "fill": "lightgray", "stroke": "white"},
+            "encoding": {"tooltip": {"field": "note"}}
+            },
+            {
+            "transform": [
+                {
+                "lookup": "properties.NAME",
+                "from": {
+                    "data": {
+                    "url": "https://raw.githubusercontent.com/KUUN4L/3179/refs/heads/main/world-data-2023.csv"
+                    },
+                    "key": "Country",
+                    "fields": ["Life expectancy"]
+                }
+                }
+            ],
+            "mark": {"type": "geoshape", "stroke": "white", "fill": "lightgreen"},
+            "encoding": {
+                "tooltip": [
+                {"field": "properties.NAME", "type": "nominal", "title": "Country"},
+                {"field": "Life expectancy", "type": "quantitative", "title": "Life expectancy"}
+                ],
+                "fill": {
+                "field": "Life expectancy",
+                "type": "quantitative",
+                "scale": {"domain": [40,50,60,70,80,90, 100], "range": ["#edf8fb","#ccece6","#99d8c9","#66c2a4","#41ae76","#238b45","#005824"]}
+                }
+            }
+            }
+        ],
+        "config": {}
+        }
+        vegaEmbed("#vis", spec, {mode: "vega-lite"}).then(console.log).catch(console.warn);
+    </script>
+
+
+    <script>
+        const spec2 = {
+        "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+        "title": "Physicians per thousand in Each Country",
+        "width": 800,
+        "height": 500,
+        "data": {
+            "url": "https://raw.githubusercontent.com/KUUN4L/3179/refs/heads/main/ne_110m.json",
+            "format": {"type": "topojson", "feature": "ne_110m_admin_0_countries"}
+        },
+        "projection": {"type": "equalEarth"},
+        "layer": [
+            {
+            "transform": [
+                {
+                "calculate": "'Data is not available in ' + datum.properties.NAME",
+                "as": "note"
+                }
+            ],
+            "mark": {"type": "geoshape", "fill": "lightgray", "stroke": "white"},
+            "encoding": {"tooltip": {"field": "note"}}
+            },
+            {
+            "transform": [
+                {
+                "lookup": "properties.NAME",
+                "from": {
+                    "data": {
+                    "url": "https://raw.githubusercontent.com/KUUN4L/3179/refs/heads/main/world-data-2023.csv"
+                    },
+                    "key": "Country",
+                    "fields": ["Physicians per thousand"]
+                }
+                }
+            ],
+            "mark": {"type": "geoshape", "stroke": "white", "fill": "lightgreen"},
+            "encoding": {
+                "tooltip": [
+                {"field": "properties.NAME", "type": "nominal", "title": "Country"},
+                {"field": "Physicians per thousand", "type": "quantitative", "title": "Physicians per thousand"}
+                ],
+                "fill": {
+                "field": "Physicians per thousand",
+                "type": "quantitative",
+                "scale": {
+                    "type": "linear",
+                    "domain": [0, 8], 
+                    "range": ["#edf8e9","#bae4b3","#74c476","#31a354","#006d2c"]
+                }
+                }
+            }
+            }
+        ],
+        "config": {}
+        }
+        vegaEmbed("#vis2", spec2, {mode: "vega-lite"}).then(console.log).catch(console.warn);
+    </script>
+
+    
+    <script>
+        const spec3 = {
+            "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+            "title": "Fertility Rate(%) of Countries",
+            "width": 800,
+            "height": 500,
+            "data": {
+                "url": "https://raw.githubusercontent.com/KUUN4L/3179/refs/heads/main/ne_110m.json",
+                "format": {"type": "topojson", "feature": "ne_110m_admin_0_countries"}
+            },
+            "projection": {"type": "equalEarth"},
+            "layer": [
+                {
+                "transform": [
+                    {
+                    "calculate": "'Data is not available in ' + datum.properties.NAME",
+                    "as": "note"
+                    }
+                ],
+                "mark": {"type": "geoshape", "fill": "lightgray", "stroke": "white"},
+                "encoding": {"tooltip": {"field": "note"}}
+                },
+                {
+                "transform": [
+                    {
+                    "lookup": "properties.NAME",
+                    "from": {
+                        "data": {
+                        "url": "https://raw.githubusercontent.com/KUUN4L/3179/refs/heads/main/world-data-2023.csv"
+                        },
+                        "key": "Country",
+                        "fields": ["Fertility Rate"]
+                    }
+                    }
+                ],
+                "mark": {"type": "geoshape", "stroke": "white"},
+                "encoding": {
+                    "color": {
+                    "field": "Fertility Rate", 
+                    "type": "quantitative",
+                    "scale": {
+                    "type": "threshold",
+                    "domain": [2, 4, 6],
+                    "range": ["#edf8fb","#b2e2e2","#66c2a4","#238b45"]
+                    }
+                    },
+                    "tooltip": [
+                    {"field": "properties.NAME", "type": "nominal", "title": "Country"},
+                    {"field": "Fertility Rate", "type": "quantitative"}
+                    ]
+                }
+                }
+                ],
+            "config": {}
+        } 
+        vegaEmbed("#vis3", spec3, {mode: "vega-lite"}).then(console.log).catch(console.warn);
+    </script>
+
+    
+    <script>
+        const spec4 = {
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "title": "Birth Rate(%) Across the World",
+    "width": 800,
+    "height": 500,
+    "data": {
+        "url": "https://raw.githubusercontent.com/KUUN4L/3179/refs/heads/main/ne_110m.json",
+        "format": {"type": "topojson", "feature": "ne_110m_admin_0_countries"}
+    },
+    "projection": {"type": "equalEarth"},
+    "layer": [
+        {
+        "transform": [
+            {
+            "calculate": "'Data is not available in ' + datum.properties.NAME",
+            "as": "note"
+            }
+        ],
+        "mark": {"type": "geoshape", "fill": "lightgray", "stroke": "white"},
+        "encoding": {"tooltip": {"field": "note"}}
+        },
+        {
+        "transform": [
+            {
+            "lookup": "properties.NAME",
+            "from": {
+                "data": {
+                "url": "https://raw.githubusercontent.com/KUUN4L/3179/refs/heads/main/world-data-2023.csv"
+                },
+                "key": "Country",
+                "fields": ["Birth Rate"]
+            }
+            }
+        ],
+        "mark": {"type": "geoshape", "stroke": "white"},
+        "encoding": {
+            "color": {
+            "field": "Birth Rate", 
+            "type": "quantitative",
+            "scale": {
+                    "type": "threshold",
+                    "domain": [10, 20, 30, 40],
+                    "range": ["#edf8fb","#b2e2e2","#66c2a4","#238b45","#006d2c"]
+                    }
+            },
+            "tooltip": [
+            {"field": "properties.NAME", "type": "nominal", "title": "Country"},
+            {"field": "Birth Rate", "type": "quantitative"}
+            ]
+        }
+        }
+    ],
+    "config": {}
+    };
+        vegaEmbed("#vis4", spec4, {mode: "vega-lite"}).then(console.log).catch(console.warn);
+    </script>
+
+
+    <script>
+        const spec5 = {
+          "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+          "title": "Maternal Mortality Ratio",
+          "width": 800,
+          "height": 500,
+          "data": {
+            "url": "https://raw.githubusercontent.com/KUUN4L/3179/refs/heads/main/ne_110m.json",
+            "format": {"type": "topojson", "feature": "ne_110m_admin_0_countries"}
+          },
+          "projection": {"type": "equalEarth"},
+          "layer": [
+            {
+              "transform": [
+                {
+                  "calculate": "'Data is not available in ' + datum.properties.NAME",
+                  "as": "note"
+                }
+              ],
+              "mark": {"type": "geoshape", "fill": "lightgray", "stroke": "white"},
+              "encoding": {"tooltip": {"field": "note"}}
+            },
+            {
+              "transform": [
+                {
+                  "lookup": "properties.NAME",
+                  "from": {
+                    "data": {
+                      "url": "https://raw.githubusercontent.com/KUUN4L/3179/refs/heads/main/world-data-2023.csv"
+                    },
+                    "key": "Country",
+                    "fields": ["Maternal mortality ratio"]
+                  }
+                }
+              ],
+              "mark": {"type": "geoshape", "stroke": "white", "fill": "lightgreen"},
+              "encoding": {
+                "tooltip": [
+                  {"field": "properties.NAME", "type": "nominal", "title": "Country"},
+                  {"field": "Maternal mortality ratio", "type": "quantitative", "title": "Maternal Mortality Ratio"}
+                ],
+                "fill": {
+                  "field": "Maternal mortality ratio",
+                  "type": "quantitative",
+                  "scale": {
+                    "type": "log",
+                    "domain": [1, 1000], 
+                    "range": ["#f7fcf5", "#e5f5e0", "#c7e9c0", "#a1d99b", "#74c476", "#41ab5d", "#238b45", "#006d2c", "#00441b"]
+                  }
+                }
+              }
+            }
+          ],
+          "config": {}
+        } 
+        vegaEmbed("#vis5", spec5, {mode: "vega-lite"}).then(console.log).catch(console.warn);
+    </script>
+
+    <script>
+        const spec6 = {
+          "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+          "title": "Infant Mortality",
+          "width": 800,
+          "height": 500,
+          "data": {
+            "url": "https://raw.githubusercontent.com/KUUN4L/3179/refs/heads/main/ne_110m.json",
+            "format": {"type": "topojson", "feature": "ne_110m_admin_0_countries"}
+          },
+          "projection": {"type": "equalEarth"},
+          "layer": [
+            {
+              "transform": [
+                {
+                  "calculate": "'Data is not available in ' + datum.properties.NAME",
+                  "as": "note"
+                }
+              ],
+              "mark": {"type": "geoshape", "fill": "lightgray", "stroke": "white"},
+              "encoding": {"tooltip": {"field": "note"}}
+            },
+            {
+              "transform": [
+                {
+                  "lookup": "properties.NAME",
+                  "from": {
+                    "data": {
+                      "url": "https://raw.githubusercontent.com/KUUN4L/3179/refs/heads/main/world-data-2023.csv"
+                    },
+                    "key": "Country",
+                    "fields": ["Infant mortality"]
+                  }
+                }
+              ],
+              "mark": {"type": "geoshape", "stroke": "white", "fill": "lightgreen"},
+              "encoding": {
+                "tooltip": [
+                  {"field": "properties.NAME", "type": "nominal", "title": "Country"},
+                  {"field": "Infant mortality", "type": "quantitative", "title": "Infant mortality"}
+                ],
+                "fill": {
+                  "field": "Infant mortality",
+                  "type": "quantitative",
+                  "scale": {
+                    "type": "linear",
+                    "domain": [1, 80], 
+                    "range": ["#edf8e9","#bae4b3","#74c476","#31a354","#006d2c"]
+                  }
+                }
+              }
+            }
+          ],
+          "config": {}
+        };
+        vegaEmbed("#vis6", spec6, {mode: "vega-lite"}).then(console.log).catch(console.warn);
+    </script>
 </body>
 </html>

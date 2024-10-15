@@ -13,13 +13,13 @@
     <h1 style="text-align: center;">Birth Rate and Fertility Rate</h1>
     <div class="topnav">
         <a href="index.html">Home</a>
-        <a href="visualization.html">Birth Rate</a>
+        <a href="visualization.html">Life Expectancy</a>
         <a class="active" href="visualisation2.html">Birth & Firtility Rate</a>
-        <a href="#about">About</a>
+        <a href="visualisation3.html">About</a>
     </div>
-  <div id="vis" style="left: auto;"></div>
+  <div id="vis3" style="left: auto;"></div>
   <script>
-    const spec = {
+    const spec3 = {
         "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
         "title": "Fertility Rate(%) of Countries",
         "width": 800,
@@ -61,7 +61,7 @@
                 "scale": {
                 "type": "threshold",
                 "domain": [2, 4, 6],
-                "range": ["#fdbe85", "#fd8d3c", "#e6550d", "#a63603"]
+                "range": ["#edf8fb","#b2e2e2","#66c2a4","#238b45"]
                 }
                 },
                 "tooltip": [
@@ -73,11 +73,11 @@
             ],
         "config": {}
     } 
-    vegaEmbed("#vis", spec, {mode: "vega-lite"}).then(console.log).catch(console.warn);
+    vegaEmbed("#vis3", spec3, {mode: "vega-lite"}).then(console.log).catch(console.warn);
   </script>
-  <div id="vis2" style="right: auto;"></div>
+  <div id="vis4" style="right: auto;"></div>
   <script>
-    const spec2 = {
+    const spec4 = {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
   "title": "Birth Rate(%) Across the World",
   "width": 800,
@@ -113,7 +113,15 @@
       ],
       "mark": {"type": "geoshape", "stroke": "white"},
       "encoding": {
-        "color": {"field": "Birth Rate", "type": "quantitative"},
+        "color": {
+          "field": "Birth Rate", 
+          "type": "quantitative",
+          "scale": {
+                "type": "threshold",
+                "domain": [10, 20, 30, 40],
+                "range": ["#edf8fb","#b2e2e2","#66c2a4","#238b45","#006d2c"]
+                }
+        },
         "tooltip": [
           {"field": "properties.NAME", "type": "nominal", "title": "Country"},
           {"field": "Birth Rate", "type": "quantitative"}
@@ -123,7 +131,7 @@
   ],
   "config": {}
 };
-    vegaEmbed("#vis2", spec2, {mode: "vega-lite"}).then(console.log).catch(console.warn);
+    vegaEmbed("#vis4", spec4, {mode: "vega-lite"}).then(console.log).catch(console.warn);
   </script>
 </body>
 </html>
